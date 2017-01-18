@@ -1,0 +1,50 @@
+        OCaml version 4.02.1
+
+# type ('nonterminal, 'terminal) symbol = N of 'nonterminal | T of 'terminal
+val get_rules : ('a * 'b) list -> 'a -> 'b list = <fun>
+val convert_grammar : 'a * ('b * 'c) list -> 'a * ('b -> 'c list) = <fun>
+val examine_rhs :
+  ('a -> ('a, 'b) symbol list list) ->
+  ('a, 'b) symbol list ->
+  (('a * ('a, 'b) symbol list) list -> 'b list -> ('c * 'd) option) ->
+  ('a * ('a, 'b) symbol list) list -> 'b list -> ('c * 'd) option = <fun>
+val examine_rules :
+  ('a -> ('a, 'b) symbol list list) ->
+  'a ->
+  ('a, 'b) symbol list list ->
+  (('a * ('a, 'b) symbol list) list -> 'b list -> ('c * 'd) option) ->
+  ('a * ('a, 'b) symbol list) list -> 'b list -> ('c * 'd) option = <fun>
+val init_parser :
+  ('a -> ('a, 'b) symbol list list) ->
+  'a ->
+  (('a * ('a, 'b) symbol list) list -> 'b list -> ('c * 'd) option) ->
+  ('a * ('a, 'b) symbol list) list -> 'b list -> ('c * 'd) option = <fun>
+val parse_prefix :
+  'a * ('a -> ('a, 'b) symbol list list) ->
+  (('a * ('a, 'b) symbol list) list -> 'b list -> ('c * 'd) option) ->
+  'b list -> ('c * 'd) option = <fun>
+# type opsys_nonterminals = Ios | Linux | Unix | Windows
+val accept_all : 'a -> 'b -> ('a * 'b) option = <fun>
+val accept_empty_suffix : 'a -> 'b list -> ('a * 'c list) option = <fun>
+val small_rules :
+  (opsys_nonterminals * (opsys_nonterminals, string) symbol list) list =
+  [(Ios, [N Linux; N Unix]); (Ios, [T "I"; N Windows; T "S"]);
+   (Ios, [N Windows]); (Linux, [T "I"]); (Unix, [T "U"]); (Windows, [T "P"]);
+   (Windows, [T "U"]); (Linux, [N Windows; T "L"]);
+   (Unix, [T "("; N Linux; T ")"])]
+val my_gram :
+  opsys_nonterminals *
+  (opsys_nonterminals * (opsys_nonterminals, string) symbol list) list =
+  (Ios,
+   [(Ios, [N Linux; N Unix]); (Ios, [T "I"; N Windows; T "S"]);
+    (Ios, [N Windows]); (Linux, [T "I"]); (Unix, [T "U"]);
+    (Windows, [T "P"]); (Windows, [T "U"]); (Linux, [N Windows; T "L"]);
+    (Unix, [T "("; N Linux; T ")"])])
+val frag : string list = ["I"; "U"; "S"]
+val convert0 :
+  opsys_nonterminals *
+  (opsys_nonterminals -> (opsys_nonterminals, string) symbol list list) =
+  (Ios, <fun>)
+val test_1 : bool = true
+val test_2 : bool = true
+# 

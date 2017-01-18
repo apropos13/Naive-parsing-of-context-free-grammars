@@ -1,0 +1,46 @@
+In implementing convert_grammar I used a helper function 
+get_rules to which I passed the rules of a grammar in the old-style 
+as well as a non-terminal symbol. This is basically my production 
+function, which returns all the rules for the given symbol. 
+Convert grammar needs only to extract the start symbol and the rules
+from the old grammar and call get_rules on the old-grammar-rules.
+
+My algorithm for implementing parse_prefix is the following:
+
+1.Start with the rules of a given symbol (first time this is the start symbol)
+
+2.For each symbol if the list of rules is empty return None
+
+3.Extract the first rule for a given symbol 
+	  4. For the rhs of the rule perform step 8:
+	     5. If step 8 returns an acceptable derivation then accept it and 
+	     	return it.
+	     6. Else if it returns none procceed to check the next rule
+
+7. If the rhs of the rule is empty return what the acceptor tells you
+8.For each symbol of the rhs of each rule:
+	9.If the symbol is a terminal symbol, and if the fragment is not empty 
+	   extract the header of the fragment
+	   10. if the symbol and the header are equal then move to the next token of
+	 the fragment and go to step 2 
+	   11. Else return None
+	12.Else if the fragement is empty return None
+	13.If the symbol is a non terminal symbol  then go to step 1 
+	    and pass as the given symbol the non terminal symbol found in step 8
+
+In order to imlement parse_prefix using the above algorithm I used the following
+helper functions:
+
+examine_rhs : Performs steps 7 to 13
+examine_rules : Performs streps 2 to 6
+init_parser: Initializer of the examine_rhs and examine_rules. 
+Performs step 1 of the algorithm. 
+
+The difficult part about this algorithm is that is it mutually recursive and 
+I had some trouble implementing it since I was not able to test each subpart
+completely before finishing the whole algorithm. 
+
+Some Possible weaknesses:
+1.Performance can be a big issue especially with large grammers
+2.Moreover there exist cases that will make the program infinitely loop
+(i.e. non-tail recursive grammars, self-referential definitions)
